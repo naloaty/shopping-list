@@ -1,16 +1,26 @@
 package me.naloaty.shoppinglist.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import me.naloaty.shoppinglist.domain.ShopItem
 import me.naloaty.shoppinglist.domain.ShopListRepository
 import java.lang.RuntimeException
 
 object SimpleShopListRepositoryImpl: ShopListRepository {
 
+    private val shopListLD = MutableLiveData<List<ShopItem>>()
     private val shopList = mutableListOf<ShopItem>()
     private var autoIncrementId = 0
 
-    override fun getShopList(): List<ShopItem> {
-        return shopList.toList()
+    init {
+        for (i in 0..10) {
+            val item = ShopItem("Title $i", i, true)
+            addShopItem(item)
+        }
+    }
+
+    override fun getShopList(): LiveData<List<ShopItem>> {
+        return shopListLD
     }
 
     override fun getShopItem(shopItemId: Int): ShopItem {
@@ -24,6 +34,7 @@ object SimpleShopListRepositoryImpl: ShopListRepository {
             shopItem.id = autoIncrementId++
         }
         shopList.add(shopItem)
+        updateList()
     }
 
     override fun editShopItem(shopItem: ShopItem) {
@@ -34,6 +45,11 @@ object SimpleShopListRepositoryImpl: ShopListRepository {
 
     override fun deleteShopItem(shopItem: ShopItem) {
         shopList.remove(shopItem)
+        updateList()
+    }
+
+    private fun updateList() {
+        shopListLD.value = shopList.toList()
     }
 
 }
