@@ -4,4 +4,6 @@
     <string name="input_hint_title">Title</string>
     <string name="input_hint_count">Count</string>
     <string name="btn_save">Save</string>
+    <string name="invalid_title">Invalid item title</string>
+    <string name="invalid_count">Invalid item count</string>
 </resources>
