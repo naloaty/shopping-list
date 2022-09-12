@@ -8,6 +8,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputLayout
@@ -15,15 +16,7 @@ import me.naloaty.shoppinglist.R
 import me.naloaty.shoppinglist.domain.ShopItem
 import java.lang.RuntimeException
 
-class ShopItemActivity : AppCompatActivity() {
-
-//    private lateinit var viewModel: ShopItemViewModel
-//
-//    private lateinit var tilTitle: TextInputLayout
-//    private lateinit var tilCount: TextInputLayout
-//    private lateinit var etTitle: EditText
-//    private lateinit var etCount: EditText
-//    private lateinit var btnSave: Button
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.EditingFinishedListener {
 
     private var screenMode = UNDEFINED_SCREEN_MODE
     private var shopItemId = ShopItem.UNDEFINED_ID
@@ -32,7 +25,9 @@ class ShopItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
         parseIntent()
-        launchRightMode()
+        if (savedInstanceState == null) {
+            launchRightMode()
+        }
     }
 
     private fun launchRightMode() {
@@ -43,7 +38,7 @@ class ShopItemActivity : AppCompatActivity() {
         }
 
         supportFragmentManager.beginTransaction()
-            .add(R.id.shop_item_container, fragment)
+            .replace(R.id.shop_item_container, fragment)
             .commit()
     }
 
@@ -65,6 +60,11 @@ class ShopItemActivity : AppCompatActivity() {
 
             shopItemId = intent.getIntExtra(EXTRA_SHOP_ITEM_ID, ShopItem.UNDEFINED_ID)
         }
+    }
+
+    override fun onEditingFinished() {
+        Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
+        finish()
     }
 
     companion object {

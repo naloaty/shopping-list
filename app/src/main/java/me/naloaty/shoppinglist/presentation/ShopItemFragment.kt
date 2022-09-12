@@ -1,8 +1,10 @@
 package me.naloaty.shoppinglist.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +20,7 @@ import java.lang.RuntimeException
 class ShopItemFragment: Fragment() {
 
     private lateinit var viewModel: ShopItemViewModel
+    private lateinit var onEditingFinishedListener: EditingFinishedListener
 
     private lateinit var tilTitle: TextInputLayout
     private lateinit var tilCount: TextInputLayout
@@ -28,9 +31,21 @@ class ShopItemFragment: Fragment() {
     private var screenMode: String = UNDEFINED_SCREEN_MODE
     private var shopItemId: Int = ShopItem.UNDEFINED_ID
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is EditingFinishedListener) {
+            onEditingFinishedListener = context
+        } else {
+            throw RuntimeException("Activity must implement EditingFinishedListener")
+        }
+
+        Log.d("LifecycleTest", "onAttach()")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         parseParams()
+        Log.d("LifecycleTest", "onCreate()")
     }
 
     override fun onCreateView(
@@ -38,6 +53,7 @@ class ShopItemFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.d("LifecycleTest", "onCreateView()")
         return inflater.inflate(R.layout.fragment_shop_item, container, false)
     }
 
@@ -47,6 +63,42 @@ class ShopItemFragment: Fragment() {
         initViews(view)
         launchRightMode()
         observeViewModel()
+        Log.d("LifecycleTest", "onViewCreated()")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("LifecycleTest", "onStart()")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("LifecycleTest", "onResume()")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("LifecycleTest", "onPause()")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("LifecycleTest", "onStop()")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("LifecycleTest", "onDestroyView()")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("LifecycleTest", "onDestroy()")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.d("LifecycleTest", "onDetach()")
     }
 
     private fun launchRightMode() {
@@ -113,7 +165,7 @@ class ShopItemFragment: Fragment() {
         })
 
         viewModel.closeScreen.observe(viewLifecycleOwner) {
-            activity?.onBackPressed()
+            onEditingFinishedListener.onEditingFinished()
         }
     }
 
@@ -145,6 +197,10 @@ class ShopItemFragment: Fragment() {
         etTitle = view.findViewById(R.id.et_title)
         etCount = view.findViewById(R.id.et_count)
         btnSave = view.findViewById(R.id.btn_save)
+    }
+
+    interface EditingFinishedListener {
+        fun onEditingFinished()
     }
 
     companion object {
