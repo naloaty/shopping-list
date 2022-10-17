@@ -56,12 +56,10 @@ class ShopListAdapter:
 
         when(binding) {
             is ItemShopDisabledBinding -> {
-                binding.tvTitle.text = shopItem.title
-                binding.tvCount.text = shopItem.count.toString()
+                binding.shopItem = shopItem
             }
             is ItemShopEnabledBinding -> {
-                binding.tvTitle.text = shopItem.title
-                binding.tvCount.text = shopItem.count.toString()
+                binding.shopItem = shopItem
             }
         }
     }

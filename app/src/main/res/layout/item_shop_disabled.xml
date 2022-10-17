@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+    <data>
+        <variable
+            name="shopItem"
+            type="me.naloaty.shoppinglist.domain.ShopItem" />
+    </data>
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,6 +32,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/black_pale"
+                android:text="@{shopItem.title}"
                 tools:text="Wipes"/>
 
             <TextView
@@ -36,6 +42,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/black_pale"
+                android:text="@{String.valueOf(shopItem.count)}"
                 tools:text="1"/>
 
         </LinearLayout>
